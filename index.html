@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 遊戲活動日曆</title>
+  <title>🎮 게임 활동 달력</title>
   <style>
     * {
       margin: 0;
@@ -30,7 +30,6 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* 標題列 + 月份切換 */
     .header-row {
       display: flex;
       justify-content: space-between;
@@ -82,7 +81,6 @@
       text-align: center;
     }
 
-    /* 星期標頭 */
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -99,7 +97,6 @@
       border-radius: 30px;
     }
 
-    /* 日期格 */
     .day-cell {
       background: #f8fafc;
       border-radius: 1rem;
@@ -143,6 +140,17 @@
       text-overflow: ellipsis;
       border-left: 2px solid #3b82f6;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .activity-list li img {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      object-fit: contain;
     }
 
     .empty-day {
@@ -161,12 +169,12 @@
       padding-top: 1rem;
     }
 
-    /* 手機版調整 */
     @media (max-width: 600px) {
       .app-wrapper { padding: 1rem; }
       .day-cell { min-height: 65px; padding: 0.2rem; }
       .day-number { font-size: 0.75rem; }
       .activity-list li { font-size: 0.55rem; }
+      .activity-list li img { width: 15px; height: 15px; }
       .month-nav .month-label { font-size: 1rem; min-width: 90px; }
       h1 { font-size: 1.3rem; }
     }
@@ -174,73 +182,98 @@
 </head>
 <body>
 <div class="app-wrapper">
-  <!-- 標題 + 月份切換 -->
   <div class="header-row">
-    <h1>🎮 活動日曆</h1>
+    <h1>🎮 게임 활동 달력</h1>
     <div class="month-nav">
       <button id="prevMonth">‹</button>
-      <span class="month-label" id="monthLabel">2026年8月</span>
+      <span class="month-label" id="monthLabel">2026년 8월</span>
       <button id="nextMonth">›</button>
     </div>
   </div>
 
-  <!-- 日曆主體 -->
   <div class="calendar-grid" id="calendarGrid"></div>
-  <div class="footer-note">📅 點擊月份切換 · 固定活動已內建至 2026/12</div>
+  <div class="footer-note">📅 월간 전환 · 고정 활동 자동 생성 (~2026/12)</div>
 </div>
 
 <script>
   // ============================================================
-  //  ✅ 正確活動資料（7/27 ~ 12/31，根據您確認的規則）
+  //  ✅ 활동 데이터 (한국어 + 이미지)
   // ============================================================
 
-  // ---------- 工具：產生活動 ----------
+  // 이미지 URL 매핑
+  const ICONS = {
+    bear: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21150133/jump_icon_40088.png',
+    mine: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2023/10/jump_icon_40191.png',
+    castle: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/07/%E7%8E%8B%E5%9F%8E%E4%BA%89%E5%A4%BA%E6%88%98.png',
+    svs: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21145433/jump_icon_40117.png',
+    joy: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21144421/jump_icon_40086.png',
+    miya: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/09/jump_icon_40154.png',
+    factory: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/07/jump_icon_40104-%E5%89%AF%E6%9C%AC-1.png',
+    canyon: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/08/%E5%B3%A1%E8%B0%B7%E4%BC%9A%E6%88%98.png'
+  };
+
+  // 아이콘 HTML 생성 함수
+  function icon(imgUrl, label) {
+    return `<img src="${imgUrl}" alt="${label}"> ${label}`;
+  }
+
   function buildActivityMap() {
     const map = {};
 
-    function add(date, act) {
+    function add(date, htmlStr) {
       const key = date.toISOString().slice(0, 10);
       if (!map[key]) map[key] = [];
-      if (!map[key].includes(act)) map[key].push(act);
+      if (!map[key].includes(htmlStr)) map[key].push(htmlStr);
     }
 
     function clone(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
     const end = new Date(2026, 11, 31);
 
-    // 1. 獵熊：7/27 起 +2天
+    // 1. 곰 (獵熊) : 7/27 +2일
     for (let d = new Date(2026, 6, 27); d <= end; d.setDate(d.getDate() + 2)) {
-      add(clone(d), '🐻 獵熊');
+      add(clone(d), icon(ICONS.bear, '곰'));
     }
 
-    // 2. 燃霜：每隔2週 週二，7/28 起
+    // 2. 광산 (燃霜) : 2주 간격 화요일, 7/28
     for (let d = new Date(2026, 6, 28); d <= end; d.setDate(d.getDate() + 14)) {
-      if (d.getDay() === 2) add(clone(d), '❄️ 燃霜');
+      if (d.getDay() === 2) add(clone(d), icon(ICONS.mine, '광산'));
     }
 
-    // 3. 喬伊：每隔2週 週二&週四，7/28、7/30 起
+    // 3. 조이 (喬伊) : 2주 간격 화요일&목요일, 7/28, 7/30
     for (let d = new Date(2026, 6, 28); d <= end; d.setDate(d.getDate() + 14)) {
-      if (d.getDay() === 2 || d.getDay() === 4) add(clone(d), '🎭 喬伊');
+      if (d.getDay() === 2 || d.getDay() === 4) add(clone(d), icon(ICONS.joy, '조이'));
     }
 
-    // 4. 內部王城：每隔4週 週六，8/1 起
+    // 4. 내부솔라 (內部王城) : 4주 간격 토요일, 8/1
     for (let d = new Date(2026, 7, 1); d <= end; d.setDate(d.getDate() + 28)) {
-      if (d.getDay() === 6) add(clone(d), '🏰 內部王城');
+      if (d.getDay() === 6) add(clone(d), icon(ICONS.castle, '내부솔라'));
     }
 
-    // 5. SVS：每隔4週 週六，7/18 起
+    // 5. SVS : 4주 간격 토요일, 7/18
     for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
-      if (d.getDay() === 6) add(clone(d), '⚔️ SVS');
+      if (d.getDay() === 6) add(clone(d), icon(ICONS.svs, 'SVS'));
     }
 
-    // 6. 峽谷：每隔4週 週六，7/11 起
+    // 6. 협곡 (峽谷) : 4주 간격 토요일, 7/11
     for (let d = new Date(2026, 6, 11); d <= end; d.setDate(d.getDate() + 28)) {
-      if (d.getDay() === 6) add(clone(d), '🏔️ 峽谷');
+      if (d.getDay() === 6) add(clone(d), icon(ICONS.canyon, '협곡'));
     }
 
-    // 7. 兵工廠：每隔2週 週日，7/26 起
+    // 7. 무공 (兵工廠) : 2주 간격 일요일, 7/26
     for (let d = new Date(2026, 6, 26); d <= end; d.setDate(d.getDate() + 14)) {
-      if (d.getDay() === 0) add(clone(d), '🏭 兵工廠');
+      if (d.getDay() === 0) add(clone(d), icon(ICONS.factory, '무공'));
+    }
+
+    // 8. 미야 : SVS 전주 금요일 (SVS 날짜 - 7일)
+    for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
+      if (d.getDay() === 6) {
+        const miyaDate = new Date(d);
+        miyaDate.setDate(miyaDate.getDate() - 7);
+        if (miyaDate >= new Date(2026, 6, 1)) {
+          add(clone(miyaDate), icon(ICONS.miya, '미야'));
+        }
+      }
     }
 
     return map;
@@ -249,11 +282,11 @@
   const activityMap = buildActivityMap();
 
   // ============================================================
-  //  渲染日曆（支援月份切換）
+  //  渲染日曆
   // ============================================================
 
   let currentYear = 2026;
-  let currentMonth = 7; // 8月
+  let currentMonth = 7;
 
   const grid = document.getElementById('calendarGrid');
   const label = document.getElementById('monthLabel');
@@ -262,30 +295,24 @@
     const first = new Date(year, month, 1);
     const last = new Date(year, month + 1, 0);
     const daysInMonth = last.getDate();
-    const startDay = first.getDay(); // 0=日
+    const startDay = first.getDay();
 
     const today = new Date();
     const todayStr = today.toISOString().slice(0, 10);
 
     let html = '';
-
-    // 星期頭
-    const week = ['日', '一', '二', '三', '四', '五', '六'];
+    const week = ['일', '월', '화', '수', '목', '금', '토'];
     for (let i = 0; i < 7; i++) {
       html += `<div class="day-header">${week[i]}</div>`;
     }
 
-    // 補空白
     for (let i = 0; i < startDay; i++) {
       html += `<div class="day-cell other-month" style="background:transparent;border:none;min-height:auto;box-shadow:none;"></div>`;
     }
 
-    // 每一天
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(year, month, d);
       const key = dateObj.toISOString().slice(0, 10);
-      const dayNum = d;
-
       const acts = activityMap[key] || [];
       const isToday = (key === todayStr);
 
@@ -300,17 +327,16 @@
       const todayClass = isToday ? 'today' : '';
       html += `
         <div class="day-cell ${todayClass}">
-          <div class="day-number">${dayNum}</div>
+          <div class="day-number">${d}</div>
           ${listHtml}
         </div>
       `;
     }
 
     grid.innerHTML = html;
-    label.textContent = `${year}年${month + 1}月`;
+    label.textContent = `${year}년 ${month + 1}월`;
   }
 
-  // 切換月份
   document.getElementById('prevMonth').addEventListener('click', () => {
     if (currentMonth === 0) {
       currentMonth = 11;
@@ -318,7 +344,6 @@
     } else {
       currentMonth--;
     }
-    // 不允許小於 2026/7
     if (currentYear < 2026 || (currentYear === 2026 && currentMonth < 6)) {
       currentMonth = 6;
       currentYear = 2026;
@@ -333,7 +358,6 @@
     } else {
       currentMonth++;
     }
-    // 不允許超過 2026/12
     if (currentYear > 2026 || (currentYear === 2026 && currentMonth > 11)) {
       currentMonth = 11;
       currentYear = 2026;
@@ -341,7 +365,6 @@
     render(currentYear, currentMonth);
   });
 
-  // 初始渲染：2026年8月
   render(2026, 7);
 </script>
 </body>
