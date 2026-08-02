@@ -265,16 +265,16 @@
       if (d.getDay() === 0) add(clone(d), icon(ICONS.factory, '무공'));
     }
 
-    // 8. 미야 : SVS 전주 금요일 (SVS 날짜 - 7일)
-    for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
-      if (d.getDay() === 6) {
-        const miyaDate = new Date(d);
-        miyaDate.setDate(miyaDate.getDate() - 7);
-        if (miyaDate >= new Date(2026, 6, 1)) {
-          add(clone(miyaDate), icon(ICONS.miya, '미야'));
-        }
-      }
+// 8. 미야 : SVS 전주 금요일 (SVS 날짜 - 8일 = 上週五)
+for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
+  if (d.getDay() === 6) {
+    const miyaDate = new Date(d);
+    miyaDate.setDate(miyaDate.getDate() - 8);  // 週六 → 上週五
+    if (miyaDate >= new Date(2026, 6, 1)) {
+      add(clone(miyaDate), icon(ICONS.miya, '미야'));
     }
+  }
+}
 
     return map;
   }
