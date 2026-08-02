@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 게임 이벤트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>🎮 게임 활동 달력</title>
   <style>
     * {
       margin: 0;
@@ -17,97 +17,99 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 0.5rem;
     }
 
     .app-wrapper {
       max-width: 1100px;
       width: 100%;
       background: #ffffff;
-      border-radius: 2rem;
-      padding: 2rem 1.8rem 2rem;
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+      border-radius: 1.2rem;
+      padding: 0.8rem 0.5rem 1rem;
+      box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.15);
       border: 1px solid #e2e8f0;
+      overflow: hidden;
     }
 
     .header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.8rem;
+      margin-bottom: 0.8rem;
       flex-wrap: wrap;
-      gap: 0.8rem;
+      gap: 0.3rem;
+      padding: 0 0.2rem;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.2rem;
       color: #0f172a;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
     }
 
     .month-nav {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.3rem;
       background: #f1f5f9;
-      padding: 0.3rem 1rem;
+      padding: 0.1rem 0.5rem;
       border-radius: 40px;
     }
 
     .month-nav button {
       background: transparent;
       border: none;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       cursor: pointer;
       color: #334155;
       font-weight: 600;
-      padding: 0 0.3rem;
-      transition: 0.15s;
-      line-height: 1;
+      padding: 0 0.2rem;
+      line-height: 1.2;
     }
 
     .month-nav button:hover {
       color: #0f172a;
-      transform: scale(1.1);
     }
 
     .month-nav .month-label {
-      font-size: 1.2rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #0f172a;
-      min-width: 120px;
+      min-width: 80px;
       text-align: center;
     }
 
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 0.5rem;
+      gap: 0.25rem;
     }
 
     .day-header {
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.6rem;
       text-align: center;
       color: #64748b;
-      padding: 0.5rem 0;
+      padding: 0.2rem 0;
       background: #f8fafc;
-      border-radius: 30px;
+      border-radius: 20px;
     }
 
     .day-cell {
       background: #f8fafc;
-      border-radius: 1rem;
-      padding: 0.4rem 0.3rem 0.3rem;
-      min-height: 80px;
+      border-radius: 0.6rem;
+      padding: 0.2rem 0.15rem 0.15rem;
+      min-height: 52px;
+      height: auto;
       border: 1px solid #e2e8f0;
-      transition: 0.1s ease;
+      overflow: hidden;
+      word-break: break-all;
     }
 
     .day-cell.other-month {
-      opacity: 0.35;
+      opacity: 0.3;
     }
 
     .day-cell.today {
@@ -117,24 +119,26 @@
 
     .day-number {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       color: #0f172a;
-      padding-left: 0.3rem;
-      margin-bottom: 0.2rem;
+      padding-left: 0.15rem;
+      margin-bottom: 0.1rem;
+      line-height: 1.2;
     }
 
     .activity-list {
       list-style: none;
-      padding: 0 0.1rem;
+      padding: 0 0.05rem;
+      margin: 0;
     }
 
     .activity-list li {
-      font-size: 0.65rem;
+      font-size: 0.5rem;
       background: #dbeafe;
       color: #1e3a5f;
-      padding: 0.1rem 0.4rem;
-      border-radius: 30px;
-      margin-bottom: 0.15rem;
+      padding: 0.05rem 0.2rem;
+      border-radius: 20px;
+      margin-bottom: 0.1rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -142,65 +146,88 @@
       font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
+      line-height: 1.3;
     }
 
     .activity-list li img {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
       flex-shrink: 0;
       object-fit: contain;
     }
 
     .empty-day {
       color: #94a3b8;
-      font-size: 0.55rem;
+      font-size: 0.45rem;
       text-align: center;
-      padding: 0.2rem 0;
+      padding: 0.1rem 0;
     }
 
     .footer-note {
-      margin-top: 1.8rem;
+      margin-top: 0.8rem;
       text-align: center;
       color: #94a3b8;
-      font-size: 0.75rem;
+      font-size: 0.6rem;
       border-top: 1px solid #e2e8f0;
-      padding-top: 1rem;
+      padding-top: 0.6rem;
     }
 
-    @media (max-width: 600px) {
-      .app-wrapper { padding: 1rem; }
-      .day-cell { min-height: 65px; padding: 0.2rem; }
-      .day-number { font-size: 0.75rem; }
-      .activity-list li { font-size: 0.55rem; }
-      .activity-list li img { width: 15px; height: 15px; }
-      .month-nav .month-label { font-size: 1rem; min-width: 90px; }
-      h1 { font-size: 1.3rem; }
+    /* 超小螢幕 (手機) */
+    @media (max-width: 480px) {
+      .app-wrapper { padding: 0.4rem 0.3rem 0.6rem; border-radius: 0.8rem; }
+      h1 { font-size: 0.95rem; }
+      .month-nav .month-label { font-size: 0.8rem; min-width: 60px; }
+      .month-nav button { font-size: 1.2rem; }
+      .day-cell { min-height: 44px; padding: 0.15rem 0.1rem 0.1rem; border-radius: 0.4rem; }
+      .day-number { font-size: 0.6rem; }
+      .day-header { font-size: 0.5rem; padding: 0.1rem 0; }
+      .activity-list li { font-size: 0.4rem; padding: 0.05rem 0.15rem; border-left-width: 1.5px; gap: 1px; }
+      .activity-list li img { width: 11px; height: 11px; }
+      .empty-day { font-size: 0.4rem; }
+      .footer-note { font-size: 0.5rem; margin-top: 0.4rem; padding-top: 0.4rem; }
+    }
+
+    /* 極小螢幕 (舊手機) */
+    @media (max-width: 380px) {
+      .day-cell { min-height: 38px; }
+      .day-number { font-size: 0.5rem; }
+      .activity-list li { font-size: 0.35rem; }
+      .activity-list li img { width: 9px; height: 9px; }
+      .month-nav .month-label { font-size: 0.65rem; min-width: 50px; }
+      h1 { font-size: 0.8rem; }
+    }
+
+    /* 平板 / 大螢幕 */
+    @media (min-width: 768px) {
+      .app-wrapper { padding: 2rem 1.8rem 2rem; }
+      .day-cell { min-height: 80px; padding: 0.4rem 0.3rem 0.3rem; }
+      .day-number { font-size: 0.9rem; }
+      .day-header { font-size: 0.85rem; padding: 0.5rem 0; }
+      .activity-list li { font-size: 0.65rem; padding: 0.1rem 0.4rem; }
+      .activity-list li img { width: 18px; height: 18px; }
+      h1 { font-size: 1.8rem; }
+      .month-nav .month-label { font-size: 1.2rem; min-width: 120px; }
+      .month-nav button { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
 <div class="app-wrapper">
   <div class="header-row">
-    <h1>🎮 게임 이벤트</h1>
+    <h1>🎮 게임 활동 달력</h1>
     <div class="month-nav">
       <button id="prevMonth">‹</button>
       <span class="month-label" id="monthLabel">2026년 8월</span>
       <button id="nextMonth">›</button>
     </div>
   </div>
-
   <div class="calendar-grid" id="calendarGrid"></div>
   <div class="footer-note">📅 월간 전환 · 고정 활동 자동 생성 (~2026/12)</div>
 </div>
 
 <script>
-  // ============================================================
-  //  ✅ 활동 데이터 (한국어 + 이미지)
-  // ============================================================
-
-  // 이미지 URL 매핑
   const ICONS = {
     bear: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21150133/jump_icon_40088.png',
     mine: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2023/10/jump_icon_40191.png',
@@ -212,82 +239,59 @@
     canyon: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/08/%E5%B3%A1%E8%B0%B7%E4%BC%9A%E6%88%98.png'
   };
 
-  // 아이콘 HTML 생성 함수
   function icon(imgUrl, label) {
-    return `<img src="${imgUrl}" alt="${label}"> ${label}`;
+    return `<img src="${imgUrl}" alt="${label}" loading="lazy"> ${label}`;
   }
 
   function buildActivityMap() {
     const map = {};
-
     function add(date, htmlStr) {
       const key = date.toISOString().slice(0, 10);
       if (!map[key]) map[key] = [];
       if (!map[key].includes(htmlStr)) map[key].push(htmlStr);
     }
-
     function clone(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
     const end = new Date(2026, 11, 31);
 
-    // 1. 곰 (獵熊) : 7/27 +2일
     for (let d = new Date(2026, 6, 27); d <= end; d.setDate(d.getDate() + 2)) {
       add(clone(d), icon(ICONS.bear, '곰'));
     }
-
-    // 2. 광산 (燃霜) : 2주 간격 화요일, 7/28
     for (let d = new Date(2026, 6, 28); d <= end; d.setDate(d.getDate() + 14)) {
       if (d.getDay() === 2) add(clone(d), icon(ICONS.mine, '광산'));
     }
-
-    // 3. 조이 (喬伊) : 2주 간격 화요일&목요일, 7/28, 7/30
     for (let d = new Date(2026, 6, 28); d <= end; d.setDate(d.getDate() + 14)) {
       if (d.getDay() === 2 || d.getDay() === 4) add(clone(d), icon(ICONS.joy, '조이'));
     }
-
-    // 4. 내부솔라 (內部王城) : 4주 간격 토요일, 8/1
     for (let d = new Date(2026, 7, 1); d <= end; d.setDate(d.getDate() + 28)) {
       if (d.getDay() === 6) add(clone(d), icon(ICONS.castle, '내부솔라'));
     }
-
-    // 5. SVS : 4주 간격 토요일, 7/18
     for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
       if (d.getDay() === 6) add(clone(d), icon(ICONS.svs, 'SVS'));
     }
-
-    // 6. 협곡 (峽谷) : 4주 간격 토요일, 7/11
     for (let d = new Date(2026, 6, 11); d <= end; d.setDate(d.getDate() + 28)) {
       if (d.getDay() === 6) add(clone(d), icon(ICONS.canyon, '협곡'));
     }
-
-    // 7. 무공 (兵工廠) : 2주 간격 일요일, 7/26
     for (let d = new Date(2026, 6, 26); d <= end; d.setDate(d.getDate() + 14)) {
       if (d.getDay() === 0) add(clone(d), icon(ICONS.factory, '무공'));
     }
-
-// 8. 미야 : SVS 전주 금요일 (SVS 날짜 - 8일 = 上週五)
-for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
-  if (d.getDay() === 6) {
-    const miyaDate = new Date(d);
-    miyaDate.setDate(miyaDate.getDate() - 8);  // 週六 → 上週五
-    if (miyaDate >= new Date(2026, 6, 1)) {
-      add(clone(miyaDate), icon(ICONS.miya, '미야'));
+    // 미야 : SVS - 8일 (전주 금요일)
+    for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
+      if (d.getDay() === 6) {
+        const miyaDate = new Date(d);
+        miyaDate.setDate(miyaDate.getDate() - 8);
+        if (miyaDate >= new Date(2026, 6, 1)) {
+          add(clone(miyaDate), icon(ICONS.miya, '미야'));
+        }
+      }
     }
-  }
-}
 
     return map;
   }
 
   const activityMap = buildActivityMap();
 
-  // ============================================================
-  //  渲染日曆
-  // ============================================================
-
-  let currentYear = 2026;
-  let currentMonth = 7;
-
+  let currentYear = 2026, currentMonth = 7;
   const grid = document.getElementById('calendarGrid');
   const label = document.getElementById('monthLabel');
 
@@ -296,71 +300,41 @@ for (let d = new Date(2026, 6, 18); d <= end; d.setDate(d.getDate() + 28)) {
     const last = new Date(year, month + 1, 0);
     const daysInMonth = last.getDate();
     const startDay = first.getDay();
-
     const today = new Date();
     const todayStr = today.toISOString().slice(0, 10);
 
     let html = '';
     const week = ['일', '월', '화', '수', '목', '금', '토'];
-    for (let i = 0; i < 7; i++) {
-      html += `<div class="day-header">${week[i]}</div>`;
-    }
-
+    for (let i = 0; i < 7; i++) html += `<div class="day-header">${week[i]}</div>`;
     for (let i = 0; i < startDay; i++) {
       html += `<div class="day-cell other-month" style="background:transparent;border:none;min-height:auto;box-shadow:none;"></div>`;
     }
-
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(year, month, d);
       const key = dateObj.toISOString().slice(0, 10);
       const acts = activityMap[key] || [];
       const isToday = (key === todayStr);
-
-      let listHtml = '';
-      if (acts.length === 0) {
-        listHtml = `<div class="empty-day">－</div>`;
-      } else {
-        const items = acts.map(a => `<li>${a}</li>`).join('');
-        listHtml = `<ul class="activity-list">${items}</ul>`;
-      }
-
-      const todayClass = isToday ? 'today' : '';
-      html += `
-        <div class="day-cell ${todayClass}">
-          <div class="day-number">${d}</div>
-          ${listHtml}
-        </div>
-      `;
+      let listHtml = acts.length === 0 ? `<div class="empty-day">－</div>` : `<ul class="activity-list">${acts.map(a => `<li>${a}</li>`).join('')}</ul>`;
+      html += `<div class="day-cell ${isToday ? 'today' : ''}"><div class="day-number">${d}</div>${listHtml}</div>`;
     }
-
     grid.innerHTML = html;
     label.textContent = `${year}년 ${month + 1}월`;
   }
 
   document.getElementById('prevMonth').addEventListener('click', () => {
-    if (currentMonth === 0) {
-      currentMonth = 11;
-      currentYear--;
-    } else {
-      currentMonth--;
-    }
+    if (currentMonth === 0) { currentMonth = 11; currentYear--; }
+    else { currentMonth--; }
     if (currentYear < 2026 || (currentYear === 2026 && currentMonth < 6)) {
-      currentMonth = 6;
-      currentYear = 2026;
+      currentMonth = 6; currentYear = 2026;
     }
     render(currentYear, currentMonth);
   });
 
   document.getElementById('nextMonth').addEventListener('click', () => {
-    if (currentMonth === 11) {
-      currentMonth = 0;
-      currentYear++;
-    } else {
-      currentMonth++;
-    }
+    if (currentMonth === 11) { currentMonth = 0; currentYear++; }
+    else { currentMonth++; }
     if (currentYear > 2026 || (currentYear === 2026 && currentMonth > 11)) {
-      currentMonth = 11;
-      currentYear = 2026;
+      currentMonth = 11; currentYear = 2026;
     }
     render(currentYear, currentMonth);
   });
