@@ -82,7 +82,8 @@
     joy: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21144421/jump_icon_40086.png',
     miya: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/09/jump_icon_40154.png',
     factory: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/07/jump_icon_40104-%E5%89%AF%E6%9C%AC-1.png',
-    canyon: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/08/%E5%B3%A1%E8%B0%B7%E4%BC%9A%E6%88%98.png'
+    canyon: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/08/%E5%B3%A1%E8%B0%B7%E4%BC%9A%E6%88%98.png',
+    deam: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/09/jump_icon_40608.png'
   };
 
   function icon(imgUrl, label) {
@@ -149,6 +150,15 @@
         }
       }
     }
+
+    // 드엠 : 고정 날짜
+    const deamDates = ['2026-08-30', '2026-10-25', '2026-12-20'];
+    deamDates.forEach(dateStr => {
+      const d = new Date(dateStr);
+      if (d <= end) {
+        add(clone(d), icon(ICONS.deam, '드엠'));
+      }
+    });
 
     return map;
   }
