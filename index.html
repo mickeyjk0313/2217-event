@@ -213,7 +213,24 @@
     render(currentYear, currentMonth);
   });
 
-  render(2026, 7);
+  // 開啟時顯示當前月份
+const now = new Date();
+let initYear = now.getFullYear();
+let initMonth = now.getMonth();
+
+// 限制在 2026/7 ~ 2026/12 之間
+if (initYear < 2026 || (initYear === 2026 && initMonth < 6)) {
+  initYear = 2026;
+  initMonth = 6;
+}
+if (initYear > 2026 || (initYear === 2026 && initMonth > 11)) {
+  initYear = 2026;
+  initMonth = 11;
+}
+
+currentYear = initYear;
+currentMonth = initMonth;
+render(currentYear, currentMonth);
 </script>
 </body>
 </html>
