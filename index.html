@@ -70,11 +70,11 @@
     </div>
   </div>
   <div class="calendar-grid" id="calendarGrid"></div>
-  <div class="footer-note">📅 월간 전환 · 고정 활동 자동 생성 (~2026/12)</div>
+  <div class="footer-note">📅 월간 전환 · 고정 활동 자동 생성 (~2027/12)</div>
 </div>
 
 <script>
-  // ✅ 本地日期格式化（避免 toISOString 的 UTC 偏移）
+  // ✅ 本地日期格式化
   function formatLocal(date) {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
@@ -104,7 +104,7 @@
     }
     function clone(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
-    const end = new Date(2026, 11, 31);
+    const end = new Date(2027, 11, 31);
 
     // 곰 : 7/27 +2일
     for (let d = new Date(2026, 6, 27); d <= end; d.setDate(d.getDate() + 2)) {
@@ -156,14 +156,11 @@
       }
     }
 
-    // 드엠 : 고정 날짜
-    const deamDates = ['2026-08-30', '2026-10-25', '2026-12-20'];
-    deamDates.forEach(dateStr => {
-      const d = new Date(dateStr + 'T00:00:00');
-      if (d <= end) {
-        add(clone(d), icon(ICONS.deam, '드엠'));
-      }
-    });
+    // 드엠 : 56일 간격
+    const deamStart = new Date(2026, 7, 30); // 8/30
+    for (let d = clone(deamStart); d <= end; d.setDate(d.getDate() + 56)) {
+      add(clone(d), icon(ICONS.deam, '드엠'));
+    }
 
     return map;
   }
@@ -212,8 +209,8 @@
   document.getElementById('nextMonth').addEventListener('click', () => {
     if (currentMonth === 11) { currentMonth = 0; currentYear++; }
     else { currentMonth++; }
-    if (currentYear > 2026 || (currentYear === 2026 && currentMonth > 11)) {
-      currentMonth = 11; currentYear = 2026;
+    if (currentYear > 2027 || (currentYear === 2027 && currentMonth > 11)) {
+      currentMonth = 11; currentYear = 2027;
     }
     render(currentYear, currentMonth);
   });
@@ -227,8 +224,8 @@
     initYear = 2026;
     initMonth = 6;
   }
-  if (initYear > 2026 || (initYear === 2026 && initMonth > 11)) {
-    initYear = 2026;
+  if (initYear > 2027 || (initYear === 2027 && initMonth > 11)) {
+    initYear = 2027;
     initMonth = 11;
   }
 
