@@ -74,6 +74,11 @@
 </div>
 
 <script>
+  // ✅ 本地日期格式化（避免 toISOString 的 UTC 偏移）
+  function formatLocal(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
   const ICONS = {
     bear: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/05/21150133/jump_icon_40088.png',
     mine: 'https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2023/10/jump_icon_40191.png',
@@ -93,7 +98,7 @@
   function buildActivityMap() {
     const map = {};
     function add(date, htmlStr) {
-      const key = date.toISOString().slice(0, 10);
+      const key = formatLocal(date);
       if (!map[key]) map[key] = [];
       if (!map[key].includes(htmlStr)) map[key].push(htmlStr);
     }
@@ -154,7 +159,7 @@
     // 드엠 : 고정 날짜
     const deamDates = ['2026-08-30', '2026-10-25', '2026-12-20'];
     deamDates.forEach(dateStr => {
-      const d = new Date(dateStr);
+      const d = new Date(dateStr + 'T00:00:00');
       if (d <= end) {
         add(clone(d), icon(ICONS.deam, '드엠'));
       }
@@ -175,7 +180,7 @@
     const daysInMonth = last.getDate();
     const startDay = first.getDay();
     const today = new Date();
-    const todayStr = today.toISOString().slice(0, 10);
+    const todayStr = formatLocal(today);
 
     let html = '';
     const week = ['일', '월', '화', '수', '목', '금', '토'];
@@ -185,7 +190,7 @@
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(year, month, d);
-      const key = dateObj.toISOString().slice(0, 10);
+      const key = formatLocal(dateObj);
       const acts = activityMap[key] || [];
       const isToday = (key === todayStr);
       let listHtml = acts.length === 0 ? `<div class="empty-day">－</div>` : `<ul class="activity-list">${acts.map(a => `<li>${a}</li>`).join('')}</ul>`;
@@ -214,23 +219,22 @@
   });
 
   // 開啟時顯示當前月份
-const now = new Date();
-let initYear = now.getFullYear();
-let initMonth = now.getMonth();
+  const now = new Date();
+  let initYear = now.getFullYear();
+  let initMonth = now.getMonth();
 
-// 限制在 2026/7 ~ 2026/12 之間
-if (initYear < 2026 || (initYear === 2026 && initMonth < 6)) {
-  initYear = 2026;
-  initMonth = 6;
-}
-if (initYear > 2026 || (initYear === 2026 && initMonth > 11)) {
-  initYear = 2026;
-  initMonth = 11;
-}
+  if (initYear < 2026 || (initYear === 2026 && initMonth < 6)) {
+    initYear = 2026;
+    initMonth = 6;
+  }
+  if (initYear > 2026 || (initYear === 2026 && initMonth > 11)) {
+    initYear = 2026;
+    initMonth = 11;
+  }
 
-currentYear = initYear;
-currentMonth = initMonth;
-render(currentYear, currentMonth);
+  currentYear = initYear;
+  currentMonth = initMonth;
+  render(currentYear, currentMonth);
 </script>
 </body>
 </html>
